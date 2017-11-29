@@ -18,12 +18,17 @@ if [ "$1" == "new" ]; then
     fi
     cp "$EASYDOC_DIR/doc-template.md" "$2"
 elif [ "$1" == "export" ]; then
-    echo 'Exporting document to pdf'
-
     IN_FILE=$2
     OUT_FILE=$(mktemp)
-    mv "$OUT_FILE" "$OUT_FILE.pdf"
-    OUT_FILE="$OUT_FILE.pdf"
+    EXTENSION=$3
+    if [ -z "$EXTENSION" ]; then
+        EXTENSION="pdf"
+    fi
+
+    echo "Exporting document to $EXTENSION"
+
+    mv "$OUT_FILE" "$OUT_FILE.$EXTENSION"
+    OUT_FILE="$OUT_FILE.$EXTENSION"
 
     pandoc --filter pandoc-citeproc "$IN_FILE" -o "$OUT_FILE"
     open "$OUT_FILE"
